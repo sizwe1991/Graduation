@@ -1,0 +1,36 @@
+<ui:composition template="/template/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <h:form >
+
+
+            <table align="center">
+                <tr>
+                    <td>
+                        <h1>Oops...!!!</h1>
+                        <h2>Authentication Failed!</h2>
+
+                        <p:panel >
+                            <h3>You are not authenticated to access the requested page. <br/>
+                                Please contact the following administrators :  </h3>
+
+                            <br/> Sizwe Lushaba on x7682 | <a href="mailto:sizwel@vut.ac.za?Subject=Graduation System Authentication Failed" style="color:  blue" >sizwel@vut.ac.za</a> 
+                            <br/>  <br/>
+                            <p:commandButton value="Restore Page" ajax="false" actionListener="#{login.logout()}" style="color: green" />
+                        </p:panel>
+
+
+                    </td>
+                </tr>
+            </table>
+
+
+        </h:form>
+
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+
+        <h:form id="mainForm">
+
+            <p:growl id="msgs" showDetail="true" life="6000" />
+
+            <p:panel style=" width: 100%">
+                <h:panelGrid id="grid" columns="5" cellpadding="5">
+                    <h:outputLabel for="name" value="Search Student:" style="font-weight:bold"/>                    
+                    <p:inputText id="name" placeholder="Search Student"  value="#{ceremonyController.searchStudent}"  required="false" label="Name"/>
+                    <p:message for="name" />
+
+
+                    <p:commandButton icon="ui-icon-search" value="Search" actionListener="#{ceremonyController.searchStudent()}" ajax="false" validateClient="true" style="margin-right:10px"/>
+
+                    <p:commandButton id="btnRefresh" style="float: left" actionListener="#{ceremonyController.refreshCeremonyStudent()}" value="Refresh" 
+                                     icon="ui-icon-refresh" ajax="false"  />
+
+                </h:panelGrid>
+            </p:panel>
+
+            <p:panel id="pnl" >
+
+                <p:dataTable    emptyMessage="No student found"  
+                                var="student" value="#{ceremonyController.allceremonyStudList}" 
+                                rows="20"   paginator="true" 
+                                editable="true" style="margin-bottom:20px"
+                                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                rowsPerPageTemplate="20,30,40,50,60,70">
+
+
+
+                    <p:column sortBy="admitStno" headerText="Student No"   width="80" >
+                        <h:outputText value="#{student.admitStno}" />
+                    </p:column>
+
+
+                    <p:column sortBy="Initial" headerText="Initial" width="40">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitInit}" />
+                    </p:column>
+
+                    <p:column  width="150" headerText="Surname">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitSurname}" />
+                    </p:column>
+
+                    <p:column   headerText="Qualification">
+
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitQualdesc}" />
+                    </p:column>
+
+                    <p:column sortBy="status" width="80"  headerText="Attendance">
+
+                        <h:outputText value="#{studentController.getStatus(student.status)}" />
+                    </p:column>
+
+                    <p:column width="180" headerText="Action" >
+
+                        <p:menuButton value="Change Attendance">
+                            <p:menuitem ajax="false" actionListener="#{ceremonyController.btnPresencia(student)}"  value="Presencia" update=":mainForm"  />  
+                            <p:menuitem ajax="false" actionListener="#{ceremonyController.btnAbsencia(student)}"  value="Absencia" update=":mainForm" />
+                        </p:menuButton>
+
+                    </p:column>
+
+                </p:dataTable>
+            </p:panel>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

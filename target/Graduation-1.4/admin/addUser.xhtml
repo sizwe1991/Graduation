@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+    <ui:define name="content">
+
+        <h:form id="frm">
+
+            <p:growl id="growl" life="6000" showDetail="true" sticky="true" />  
+
+            <p:panel header="Add New User">
+
+
+                <h:panelGrid id="grid" columns="2" cellpadding="5">
+                    <h:outputLabel for="name" value="Name:" style="font-weight:bold"/>  
+
+                    <p:inputText id="name" placeholder="Staff Name" value="#{userController.user.name}"   required="false" label="Name"/>
+
+
+                    <h:outputLabel for="staffNo" value="Staff Number: " style="font-weight:bold"/>                    
+                    <p:inputText id="staffNo" placeholder="Staff No" value="#{userController.user.username}"  required="false" label="Staff Number"/>
+
+
+                    <h:outputLabel for="Email"  value="Email Address: " style="font-weight:bold"/>                    
+                    <p:inputText placeholder="Email Address" id="Email" value="#{userController.user.email}" required="false" label="Email Address"/>
+
+
+                    <h:outputLabel for="type"  value="User Type: "  style="font-weight:bold;  "/>                    
+                    <p:selectOneMenu id="type" value="#{userController.user.role}" style="width:180px">
+                        <f:selectItem itemLabel="Select User Type" itemValue="none" />
+                        <f:selectItem itemLabel="Admin" itemValue="ADMIN" />
+                        <f:selectItem itemLabel="Exams" itemValue="EXAM" />
+                        <f:selectItem itemLabel="HOD" itemValue="HOD" />
+                        <f:selectItem itemLabel="Fraud" itemValue="FRAUD" />
+                    </p:selectOneMenu>
+
+
+                    <h:outputLabel for="password" value="Password:" style="font-weight:bold"/>                    
+                    <h:panelGrid id="grid1" columns="2" cellpadding="5" >
+                        <p:password id="password" placeholder="Password" value="#{userController.user.password}"  required="false" label="Password" />
+                        <p:message for="password" />
+                    </h:panelGrid>
+
+
+                    <h:outputLabel for="confirmPassword" value="Confirm: " style="font-weight:bold"/>                    
+                    <h:panelGrid id="grid2" columns="2" cellpadding="5" >
+                        <p:password placeholder="Confirm Password" id="confirmPassword" value="#{userController.confirm}"  required="false" label="Confirm Password"/>
+                        <p:message for="confirmPassword" />                        
+                    </h:panelGrid>
+
+
+
+                </h:panelGrid>
+                <p:selectBooleanCheckbox itemLabel="User must change password after logging in the system" value="#{userController.changePwd}" />
+                <br /> <br />
+                <p:commandButton update="growl" actionListener="#{userController.btnSaveUser()}" value="Save User" ajax="false" validateClient="false" style="margin-right:10px"/>
+                <p:commandButton actionListener="#{userController.backToManageUsers()}" value="Manage Users" ajax="false" validateClient="true" style="margin-right:10px"/>
+            </p:panel>
+        </h:form>
+
+
+
+
+    </ui:define>
+</ui:composition>

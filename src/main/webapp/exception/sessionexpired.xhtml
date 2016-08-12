@@ -1,0 +1,13 @@
+<ui:composition template="/template/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <h1> Session Timed out</h1>
+
+        <h:outputText value="To login again click "/> <p:commandButton actionListener="#{login.logout()}" value="here" />
+        <h:messages></h:messages>
+    </ui:define>
+</ui:composition>

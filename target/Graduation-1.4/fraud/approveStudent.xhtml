@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<!DOCTYPE html>
+<ui:composition template="/template/fraudTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+
+    <ui:define name="content">
+
+
+        <h:form id="mainForm" styleClass="loginPanelStyle" >
+            <p:growl id="msgs" showDetail="true" sticky="false" life="6000" />                        
+
+            <p:fieldset  styleClass="loginPanelStyle" 
+                         legend="Fraud and Verification" >
+                <img src=  "${request.contextPath}/resources/images/logo.png"  alt="banner" width="500" align="center"/>                    
+
+                <table style="border: solid; width: 100%">
+                    <tr>
+                        <td>Student number</td>
+                        <td> #{studentController.gradStudent.admitStno}</td>
+                    </tr>
+                    <tr>
+                        <td>Initials</td>
+                        <td>  #{studentController.gradStudent.admitInit} </td>
+                    </tr>
+                    <tr>
+                        <td>Full name</td>
+                        <td> #{studentController.gradStudent.admitFullnames}  </td>
+                    </tr>
+                    <tr>
+                        <td>Surname</td>
+                        <td> #{studentController.gradStudent.admitSurname} </td>
+                    </tr>
+                    <tr>
+                        <td>Qualification</td>
+                        <td> #{studentController.gradStudent.admitQualdesc} </td>
+                    </tr>
+
+                </table>
+                <br/><br/>
+                <p:commandButton id="btnMatric" style="float: left" value="View matric marks" 
+                                 icon="ui-icon-circle-check" ajax="true" onclick="PF('matric').show();" />
+
+                <h:panelGrid columns="5" style="margin-bottom:10px" cellpadding="5">
+                    <p:outputLabel  value="Remark:" />
+                    <p:selectOneRadio value="#{studentController.newStatus}" id="console" >
+                        <f:selectItem itemLabel="Approve"/>
+                        <f:selectItem itemLabel="Reject"  />
+                    </p:selectOneRadio>
+
+                    <p:outputLabel value="#{studentController.comment}" value="Comment: "/>
+                    <p:inputText  />
+
+                    <p:commandButton actionListener="#{studentController.btnFraudChangeStatus()}" ajax="false" update="growl" value="Save"  />
+                </h:panelGrid>
+
+            </p:fieldset>
+
+            <p:dialog header="Student Matric" width="300" widgetVar="matric" showEffect="explode" hideEffect="bounce" height="100%">
+                <p:dataTable var="matric" value="#{studentController.getStudMatric()}">
+                    <p:column headerText="Subject">
+                        <h:outputText value="#{matric.admitSubjectdesc}" />
+                    </p:column>
+
+                    <p:column headerText="Level">
+                        <h:outputText value="#{matric.admitSubjectlevel}" />
+                    </p:column>
+
+                  
+                </p:dataTable>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

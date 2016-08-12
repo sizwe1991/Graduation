@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<ui:composition template="/template/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:form id="frm">
+
+            <p:growl id="msgs" showDetail="true" sticky="false" life="6000" /> 
+
+        <!--    <p:commandButton icon="ui-icon-search" style="float: right" value="Search Qualification" type="button"  onclick="PF('QualSearch').show();" />
+            <br /> <br /> <br />    -->
+            <p:panel id="pnl" header="Link and Unlink Qualification">
+                <p:panelMenu id="mnu">
+
+                    <c:forEach items="#{campusController.campusList}"  var="campus">
+                        <p:submenu label="#{campus.description}"  >
+
+                            <c:forEach items="#{facultyController.facultyList}"  var="faculty">
+                                <p:submenu label="#{faculty.facultyName}"  >
+                                    <c:forEach items="#{qualController.getDistinctLevel(faculty.facultyId)}"  var="level">
+
+                                        <p:submenu label="#{level}"  icon="ui-icon-note" >
+                                            <p:menuitem>
+                                                <p:dataTable var="myqual" value="#{qualController.getQualDetials(faculty.facultyId, level)}"
+                                                             >
+                                                    <p:column headerText="Qual Code">
+                                                        <h:outputText value="#{myqual.qualCode}" />
+                                                    </p:column>
+
+                                                    <p:column headerText="Qual Name">
+                                                        <h:outputText value="#{myqual.qualName}" />
+                                                    </p:column>
+
+
+                                                    <p:column headerText="Action">
+                                                        <p:commandButton update="frm:pnl:mnu" ajax="false"
+                                                                         value="#{campusQualificationController.btnLinkText(campus, myqual)}" 
+                                                                         actionListener="#{campusQualificationController.btnLinkUnlinkClick(campus, myqual)}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:menuitem>
+
+
+                                        </p:submenu>
+
+                                    </c:forEach>
+                                </p:submenu>
+                            </c:forEach>  
+                        </p:submenu>
+                    </c:forEach>                        
+
+                </p:panelMenu>
+            </p:panel>
+
+            <br /><br />
+
+            <p:dialog width="1100" header="Search Qualification" widgetVar="QualSearch" focus="txtSearch">
+                <p:panelGrid columns="6" >
+                    <p:outputLabel value="Search Qualification" />
+                    <p:inputText id="txtSearch" placeholder="Type qualification name here" size="30" />
+                    <p:outputLabel value="Campus Name" />
+                    <p:selectOneMenu id="campus" value="#{reportController.campus}"  >
+                        <f:selectItem itemLabel="Select Campus" itemValue="" noSelectionOption="true" />
+                        <c:forEach items="#{campusController.campusList}"  var="campus">
+                            <f:selectItem itemLabel="#{campus.description}" itemValue="#{campus.description}"  />
+                        </c:forEach>
+                    </p:selectOneMenu>
+                    <p:commandButton icon="ui-icon-search" value="Search" />
+                </p:panelGrid>
+                <br /> <br />
+                <p:dataTable var="car"  scrollable="true" scrollHeight="250">
+                    <p:column width="80" headerText="Qual Code" >
+                        <h:outputText value="sample" />
+                    </p:column>
+                    <p:column width="180" headerText="Description" >
+                        <h:outputText value="sample" />
+                    </p:column>
+                    <p:column width="180" headerText="Campus" >
+                        <h:outputText value="sample" />
+                    </p:column>
+                    <p:column width="180" headerText="Faculty" >
+                        <h:outputText value="sample" />
+                    </p:column>
+                    <p:column width="70" headerText="Status" >
+                        <h:outputText value="sample" />
+                    </p:column>
+                </p:dataTable>
+
+                <br /><br />
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

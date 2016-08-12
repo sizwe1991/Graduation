@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+
+    <ui:define name="content">
+
+
+
+
+        <h:form id="mainForm" >
+
+            <p:growl id="msgs"  showDetail="true" sticky="false" life="6000" /> 
+
+            <p:panel  style=" width: 100%">
+
+
+                <h:panelGrid id="grid" columns="6" cellpadding="5">
+                    <h:outputLabel for="name" value="Search Student:" style="font-weight:bold"/>                    
+                    <p:inputText id="name" placeholder="Search Student"  value="#{studentController.searchFraud}"  required="false" label="Name"/>
+                    <p:message for="name" />
+
+                    <p:commandButton icon="ui-icon-search" value="Search" actionListener="#{studentController.searchFraudMethod()}" ajax="false" validateClient="true" style="margin-right:10px"/>
+
+                    <p:commandButton icon="ui-icon-search" value="Advanced Search"  onclick="PF('dlg1').show();"  style="margin-right:10px"/>
+
+                    <p:commandButton actionListener="#{studentController.refreshexamRecievedStud()}" icon="ui-icon-refresh" value="Refresh" ajax="false" validateClient="true" style="margin-right:10px"/>
+                </h:panelGrid>
+
+            </p:panel>
+
+            <p:panel id="pnl">
+                <p:dataTable scrollable="true" scrollHeight="250" id="pnlStudents" widgetVar="studentsTable" var="student" value="#{studentController.examRecievedStud}" emptyMessage="No student found"
+                             resizableColumns="true"   paginator="true" 
+                             editable="true" style="margin-bottom:20px" selectionMode="single" rowKey="#{student.admitStno}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,20,30,40">
+                    <p:ajax event="rowSelect" listener="#{studentController.onRowSelect}" update=":mainForm" />
+
+                    <p:column style="width:50px" headerText="Matric">
+                        <p:rowToggler />
+                    </p:column>
+
+                    <p:column sortBy="admitStno"  headerText="Student No"  width="70" >
+                        <h:outputText value="#{student.admitStno}" />
+                    </p:column>
+
+                    <p:column sortBy="admitInit" width="40" headerText="Initial">
+                        <h:outputText value="#{student.admitInit}" />
+                    </p:column>
+
+                    <p:column sortBy="admitSurname" width="120" headerText="Surname" >
+                        <h:outputText value="#{student.admitSurname}" />
+                    </p:column>
+
+                    <p:column sortBy="admitIdpassport" headerText="ID/Passport" width="120">
+                        <h:outputText value="#{student.admitIdpassport}" />
+                    </p:column>
+
+                    <p:column sortBy="admitQualdesc"  headerText="Qualification">
+                        <h:outputText value="#{student.admitQualdesc}" />
+                    </p:column>
+
+
+
+                    <p:column headerText="Action" width="180">
+                        <p:menuButton value="Respond to Student">
+                            <p:menuitem ajax="false"  value="Approve Student" actionListener="#{studentController.btnFraudApproveStudent(student)}" update=":mainForm:pnlStudents" />  
+                            <p:menuitem ajax="false"  value="Reject Student" actionListener="#{studentController.btnFraudRejectStudent(student)}" update=":mainForm:pnlStudents"/>
+                        </p:menuButton>
+                    </p:column>
+
+
+
+
+
+                    <p:rowExpansion>
+
+
+                        <p:dataTable  var="matric" value="#{studentController.getMatric(student)}">
+                            <p:column  headerText="Subject">
+                                <h:outputText value="#{matric.admitSubjectdesc}" />
+                            </p:column>
+
+                            <p:column  headerText="Level">
+                                <h:outputText value="#{matric.admitSubjectlevel}" />
+                            </p:column>
+
+                        </p:dataTable>
+                    </p:rowExpansion>
+
+                </p:dataTable>
+
+                <p:panelGrid columns="6">
+                    <p:outputLabel value="Date Received: " />                      
+
+                    <p:inputText value="#{studentController.docRecieveDate}"
+                                 style="margin-left:-4px;" readonly="true">
+                        <f:validateLength maximum="36"/>
+                    </p:inputText>
+
+                    <p:outputLabel value="Graduation Status: " />
+                    <p:inputText value="#{studentController.gradautionAttendanceStatus}"
+                                 style="margin-left:-4px;" readonly="true">
+                        <f:validateLength maximum="36"/>
+                    </p:inputText>
+
+                    <p:outputLabel value="Received By: " />
+                    <p:inputText size="40" value="#{studentController.docsReceivedBy}"
+                                 style="margin-left:-4px;" readonly="true">
+                        <f:validateLength maximum="88"/>
+                    </p:inputText>
+                </p:panelGrid>
+            </p:panel>
+
+
+            <p:dialog header="Advance Student Search" widgetVar="dlg1" minHeight="200">
+                <p:spacer />
+                <p:panelGrid columns="2">
+                    <p:outputLabel value="Qualification" />
+                    <p:selectOneMenu  value="#{studentController.selectedQual}" >
+                        <f:selectItems value="#{studentController.fraudQualificationList}" />
+                    </p:selectOneMenu>
+                    <p:commandButton icon="ui-icon-search" value="Search" actionListener="#{studentController.advanceSearch()}" ajax="false" validateClient="true" style="margin-right:10px"/>
+                </p:panelGrid>
+
+            </p:dialog>
+
+
+            <p:dialog header="Please enter reason why you reject  #{studentController.gradStudent.admitStno}-(#{studentController.gradStudent.admitInit} #{studentController.gradStudent.admitSurname}) documents" widgetVar="dlg" focus="comment">
+                <h:panelGrid columns="1" cellpadding="5">
+
+
+
+                    <p:inputTextarea id="comment" value="#{studentController.comment}" rows="5" cols="70" counter="display"  maxlength="200" counterTemplate="{0} characters remaining." autoResize="false" />
+                    <h:outputText id="display" />
+
+                    <p:panelGrid columns="2" >
+                        <p:commandButton actionListener="#{studentController.btnFraudConfirmReject()}" ajax="false"  value="Reject Student" update=":mainForm:pnlStudents" icon="ui-icon-disk" />
+
+                    </p:panelGrid>
+
+
+
+
+                </h:panelGrid>
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

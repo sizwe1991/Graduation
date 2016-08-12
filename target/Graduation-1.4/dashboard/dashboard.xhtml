@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:form id="mainForm">
+            <p:panelGrid columns="2" >
+
+                <p:panel style="vertical-align: top;">
+                    <p:chart type="bar" model="#{chart.chartModel}" 
+                             style="width: 550px;  height: 300px;vertical-align: top;"
+                             />                
+
+                </p:panel>
+
+                <p:panel>
+
+
+                    <p:dataTable id="eventsDT" var="campus" value="#{campusController.campusList}" selectionMode="single" rowKey="#{campus.campusCode}">
+
+                        <p:column headerText="Campus">
+                            <h:outputText value="#{campus.campusCode}" />
+                        </p:column>
+
+                        <p:column headerText="Exam Received">
+                            <h:outputText value="#{chart.getExamReceived(campus).size()}" />
+                        </p:column>
+
+                        <p:column headerText="Fraud Verified">
+                            <h:outputText value="#{chart.getFraudApproved(campus).size()}" />
+                        </p:column>
+
+                        <p:column headerText="Confirmed Graduates">
+                            <h:outputText value="#{chart.getConfirmedGraduates(campus).size()}" />
+                        </p:column>
+
+                    </p:dataTable>
+
+                    <p:separator />
+
+                    <p:dataTable id="dfdfdf" var="campus" value="#{campusController.campusList}" selectionMode="single" rowKey="#{campus.campusCode}">
+
+
+                        <p:column headerText="Campus">
+                            <h:outputText value="#{campus.campusCode}" />
+                        </p:column>
+
+                        <p:column headerText="Presencia">
+                            <h:outputText value="#{chart.getPresencia(campus).size()}" />
+                        </p:column>
+
+                        <p:column headerText="Absencia">
+                            <h:outputText value="#{chart.getAbsencia(campus).size()}" />
+                        </p:column>
+
+                        <p:column headerText="Total">
+                            <h:outputText value="#{chart.getTotalStudents(campus).size()}" />
+                        </p:column>
+                    </p:dataTable>
+
+
+                </p:panel>
+            </p:panelGrid>
+
+
+            <p:panelGrid columns="2">
+                <p:chart type="pie" model="#{chart.pieChartPresencia}" style="width:550px;height:300px" />
+
+                <p:chart type="pie" model="#{chart.pieChartAbsencia}" style="width:550px;height:300px" />
+                <p:outputLabel value="#{chart.presencia}"/>      <p:outputLabel value="#{chart.absencia}"/>
+            </p:panelGrid>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

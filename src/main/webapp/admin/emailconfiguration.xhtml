@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+    <ui:define name="content">
+
+        <h:form id="frm">
+            <p:growl id="growl" showDetail="true" sticky="true" life="6000" />  
+            
+            <center><h4>Student Email Configuration</h4></center>
+
+            <p:panel  toggleable="true" header="Examination Department Receiving Documents"  style="margin-bottom:20px"  >
+
+                <p:panelGrid style="float: right" columns="3" >
+                    <p:commandButton ajax="false" value="Save All Changes" actionListener="#{emailConfigController.btnChangeMsg(studentController.comment)}" style="float: right" icon="ui-icon-disk" />
+                    <p:menuButton  value="Send Email Now To" >
+                        <p:menuitem  onclick="PF('possGraduate').show();" value="Possible Graduates" style="float: right"  />
+                        <p:menuitem immediate="true" ajax="false"  value="Confirmed Graduates" style="float: right" />
+                    </p:menuButton>
+                </p:panelGrid>
+
+                <p:panelGrid columns="1">
+
+                    <p:panelGrid columns="2">
+                        <p:outputLabel value="Subject" />
+                        <p:inputText id="txtexamSubject" size="62" value="#{emailConfigController.emailConfiguration.examSubject}" />  
+                    </p:panelGrid>
+
+                    <p:outputLabel value="Body" />
+                    <p:inputTextarea id="comment" value="#{emailConfigController.emailConfiguration.examBody}" rows="7" cols="70" counter="display"  maxlength="1000" counterTemplate="{0} characters remaining." autoResize="false" />
+                    <h:outputText id="display" />
+
+
+                </p:panelGrid>
+
+            </p:panel>
+
+            <p:panel  toggleable="true"  header="Successful Emails"  style="margin-bottom:20px">        
+
+
+                <p:panelGrid columns="3" >
+
+                    <p:panel header="Fraud and Verification"  >
+                        <p:panelGrid columns="1">
+
+
+                            <p:panelGrid columns="2">
+                                <p:outputLabel value="Subject" />
+                                <p:inputText value="#{emailConfigController.emailConfiguration.fraudSubjectApprove}" size="58" />  
+                            </p:panelGrid>
+
+                            <p:outputLabel value="Body" />
+
+                            <p:inputTextarea  value="#{emailConfigController.emailConfiguration.fraudBodyApprove}" rows="7" cols="70" counter="ApprovalFraudeditor"  maxlength="1000" counterTemplate="{0} characters remaining." autoResize="false" />
+                            <h:outputText id="ApprovalFraudeditor" />
+
+
+
+                        </p:panelGrid>
+                    </p:panel>
+                    <p:panel header="Head of Department"  >
+                        <p:panelGrid columns="1">
+
+
+                            <p:panelGrid columns="1">
+                                <p:outputLabel value="Subject" />
+                                <p:inputText value="#{emailConfigController.emailConfiguration.hodSubjectApprove}" size="58" />  
+                            </p:panelGrid>
+
+                            <p:outputLabel value="Body" />
+                            <p:inputTextarea  value="#{emailConfigController.emailConfiguration.hodBodyApprove}" rows="7" cols="70" counter="ApprovalHODeditor"  maxlength="1000" counterTemplate="{0} characters remaining." autoResize="false" />
+                            <h:outputText id="ApprovalHODeditor" />
+
+
+
+                        </p:panelGrid>
+                    </p:panel>
+
+                </p:panelGrid>
+            </p:panel>
+
+            <p:panel  toggleable="true" header="Unsuccessful Emails" style="margin-bottom:20px">   
+
+                <p:panelGrid columns="3" >
+
+                    <p:panel header="Fraud and Verification"  >
+                        <p:panelGrid columns="1">
+
+
+                            <p:panelGrid columns="2">
+                                <p:outputLabel value="Subject" />
+                                <p:inputText value="#{emailConfigController.emailConfiguration.fraudSubjectReject}" size="58" />  
+                            </p:panelGrid>
+
+                            <p:outputLabel value="Body" />
+                            <p:inputTextarea  value="#{emailConfigController.emailConfiguration.fraudBodyReject}" rows="7" cols="70" counter="RejectionFraudeditor"  maxlength="1000" counterTemplate="{0} characters remaining." autoResize="false" />
+                            <h:outputText id="RejectionFraudeditor" />
+
+
+                        </p:panelGrid>
+                    </p:panel>
+                    <p:panel header="Head of Department"  >
+                        <p:panelGrid columns="1">
+
+
+                            <p:panelGrid columns="2">
+                                <p:outputLabel value="Subject" />
+                                <p:inputText value="#{emailConfigController.emailConfiguration.hodSubjectReject}" size="58" />  
+                            </p:panelGrid>
+
+                            <p:outputLabel value="Body" />
+                            <p:inputTextarea  value="#{emailConfigController.emailConfiguration.hodBodyReject}" rows="7" cols="70" counter="RejectionFraudeditor"  maxlength="1000" counterTemplate="{0} characters remaining." autoResize="false" />
+                            <h:outputText id="RejectionHODeditor" />
+
+                        </p:panelGrid> 
+                    </p:panel>
+                </p:panelGrid>
+            </p:panel>
+
+            <p:dialog header="Sending Email to Possible Graduates" widgetVar="possGraduate">
+                <p:panelGrid columns="1">
+
+                    <p:panelGrid columns="2">
+                        <p:outputLabel value="Subject" />
+                        <p:inputText placeholder="Enter Email Subject Here" value="#{emailConfigController.subject}"  size="58" />  
+                    </p:panelGrid>
+
+                    <p:outputLabel value="Body" />
+                    <p:inputTextarea placeholder="Enter Email Body Here"  value="#{emailConfigController.body}" rows="7" cols="70" counter="RejectidddonHODeditor"  maxlength="1000" counterTemplate="{0} characters remaining." autoResize="false" />
+                    <h:outputText id="RejectidddonHODeditor" />
+
+
+                    <p:commandButton actionListener="#{emailConfigController.btnSendPossibleEmail()}" update="growl" value="Send Now" style="float: right" >
+                          <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />
+                    </p:commandButton>
+
+                </p:panelGrid> 
+            </p:dialog>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>        
+    </ui:define>
+</ui:composition>

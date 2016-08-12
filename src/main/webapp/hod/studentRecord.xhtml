@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition template="/template/hodTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+
+    <ui:define name="content">
+        <h:form>
+            <p:growl id="growl" showDetail="true" sticky="true" />  
+            <p:panel id="pnl" >
+                <p:panelGrid  columns="6">
+                    <p:outputLabel value="Student No: "/>
+                    <p:inputText size="35" disabled="true" value="#{studentController.gradStudent.admitStno}" />
+
+                    <p:outputLabel value="ID/Passport: "/>
+                    <p:inputText disabled="true" value="#{studentController.gradStudent.admitIdpassport}" />
+
+                    <p:outputLabel value="Full Names: "/>
+                    <p:inputText size="35" disabled="true" value="#{studentController.gradStudent.admitFullnames }" />
+                </p:panelGrid>
+                <p:separator />
+
+                <p:dataTable  id="dt" var="record" value="#{studentController.studentAcademicList}"
+                             resizableColumns="true" rows="40"   paginator="true" 
+                             editable="true" style="margin-bottom:20px"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="40,50,60,70,80">
+                    <p:column sortBy="#{record.admitSubjectcode.substring(5,6)}" headerText="Sub Code">
+                        <h:outputText value="#{record.admitSubjectcode}" />
+                    </p:column>
+
+                    <p:column headerText="Description">
+                        <h:outputText value="#{record.admitSubjectdesc}" />
+                    </p:column>
+
+                    <p:column headerText="Mark">
+                        <h:outputText value="#{record.admitMark}" />
+                    </p:column>
+
+                    <p:column headerText="Credit Score">
+                        <h:outputText value="#{record.admitCreditscore}" />
+                    </p:column>
+
+
+
+                </p:dataTable> 
+
+                <h:panelGrid columns="5" style="margin-bottom:10px" cellpadding="5">
+                    <p:outputLabel  value="Remark:" />
+                    <p:selectOneRadio requiredMessage="Please Select Approve or Reject" required="true" value="#{studentController.newStatus}" id="console" >
+                        <f:selectItem itemLabel="Approve" itemValue="#{status.HOD_APPROVE}" />
+                        <f:selectItem itemLabel="Reject" itemValue="#{status.HOD_REJECT}" />
+                    </p:selectOneRadio>
+                    
+                    <p:outputLabel value="Comment: "/>
+                    <p:inputText value="#{studentController.comment}" />
+                    
+                    <p:commandButton ajax="false" update="growl" value="Save Remark"  actionListener="#{studentController.btnApprove()}" />
+                </h:panelGrid>
+
+            </p:panel>
+        </h:form>
+    </ui:define>
+s
+</ui:composition>

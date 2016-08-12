@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+
+        <h:form id="mainForm">
+
+            <p:growl id="msgs" showDetail="true" life="6000"/>
+
+            <p:panel style=" width: 100%">
+                <h:panelGrid id="grid" columns="6" cellpadding="5">
+                    <h:outputLabel for="name" value="Search Student:" style="font-weight:bold"/>                    
+                    <p:inputText id="name" placeholder="Search Student"  value="#{hodController.searchInput}"  required="false" label="Name"/>
+                    <p:message for="name" />
+
+                    <p:commandButton icon="ui-icon-search" value="Search" actionListener="#{hodController.btnsearchStudent()}" ajax="false" validateClient="true" style="margin-right:10px"/>
+
+
+
+                    <p:commandButton actionListener="#{hodController.btnRefreshRevertChnages()}" icon="ui-icon-refresh" value="Refresh" ajax="false" validateClient="true" style="margin-right:10px"/>
+                </h:panelGrid>
+            </p:panel>
+
+
+
+            <p:dataTable    emptyMessage="No student found"
+                            var="student" value="#{hodController.hodList}" 
+                            rows="20"   paginator="true" 
+                            editable="true" style="margin-bottom:20px"
+                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            rowsPerPageTemplate="20,30,40,50,60,70">
+                <p:ajax event="rowEdit" listener="#{hodController.onRowEdit}" update=":mainForm:msgs" />
+                <p:ajax event="rowEditCancel" listener="#{hodController.onCancel}" update=":mainForm:msgs" />
+
+                <p:column headerText="Marks" style="width:35px">
+                    <p:rowToggler />
+                </p:column>
+
+                <p:column headerText="Student No"   width="90" >
+                    <h:outputText value="#{student.admitStno}" />
+                </p:column>
+
+
+                <p:column headerText="Initials" width="40">
+                    <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitInit}" />
+                </p:column>
+
+                <p:column width="150" headerText="Surname">
+                    <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitSurname}" />
+                </p:column>
+
+                <p:column headerText="ID/Passport" width="120">
+                    <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitIdpassport}" />
+                </p:column>
+
+                <p:column   headerText="Qualification">
+
+                    <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitQualdesc}" />
+                </p:column>
+
+                <p:column headerText="Status" width="90">
+                    <h:outputText value="#{student.status}" />
+                </p:column>
+
+                <p:column headerText="Action" width="150">
+                    <p:menuButton value="Change Status">
+                        <p:menuitem ajax="false" actionListener="#{hodController.btnApproveStudentRevertion(student)}" value="Approve Student" update=":mainForm:pnlStudents" />  
+                        <p:menuitem ajax="false" actionListener="#{hodController.btnRejectStudentRevertion(student)}" value="Reject Student" update=":mainForm:pnlStudents"/>
+                    </p:menuButton>
+                </p:column>
+
+
+
+
+                <p:rowExpansion>
+
+                    <p:dataTable sortBy="#{academic.admitSubjectcode.substring(5,6)}" var="academic" value="#{studentController.studentAcademicInfoViaStudentNum(student.admitStno)}">
+                        <p:column headerText="Sub Code" width="80">
+                            <h:outputText value="#{academic.admitSubjectcode}" />
+                        </p:column>
+
+                        <p:column headerText="Description">
+                            <h:outputText value="#{academic.admitSubjectdesc}" />
+                        </p:column>
+
+                        <p:column headerText="Mark" width="80">
+                            <h:outputText value="#{academic.admitMark}" />
+                        </p:column>
+
+                        <p:column headerText="Credits" width="80">
+                            <h:outputText value="#{academic.admitCreditscore}" />
+                        </p:column>
+
+
+                        <p:summaryRow>
+                            <p:column colspan="3" style="text-align:right">
+                                <h:outputText value="" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="" />
+                            </p:column>
+                        </p:summaryRow>
+
+                    </p:dataTable>
+
+                </p:rowExpansion>
+
+
+
+            </p:dataTable>
+
+              <p:dialog header="Please enter reason why you reject  #{hodController.gradStudent.admitStno}-(#{hodController.gradStudent.admitInit} #{hodController.gradStudent.admitSurname}) application" widgetVar="dlg" focus="comment">
+                <h:panelGrid columns="1" cellpadding="5">
+
+
+                    
+
+                     <p:inputTextarea id="comment" value="#{hodController.comment}" rows="5" cols="70" counter="display"  maxlength="200" counterTemplate="{0} characters remaining." autoResize="false" />
+                    <h:outputText id="display" />
+
+                    <p:panelGrid columns="2" >
+                        <p:commandButton actionListener="#{hodController.btnConfirmRejcetionRevertion()}" ajax="false"  value="Reject Student" update=":mainForm:pnlStudents" icon="ui-icon-disk" />
+                      
+                    </p:panelGrid>
+
+
+                </h:panelGrid>
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

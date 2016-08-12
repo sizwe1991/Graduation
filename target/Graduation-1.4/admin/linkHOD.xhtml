@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition template="/template/adminTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+        <h:form>
+            
+               <p:growl id="growl" showDetail="true" sticky="true" />  
+               
+            <h:panelGrid columns="2" cellpadding="5">
+                <h:outputLabel value="Staff Number" style="font-weight:bold" />
+                <p:inputText disabled="true" value="#{userController.selectedHod.username}" />
+
+                <h:outputLabel value="Full Names" style="font-weight:bold" />
+                <p:inputText disabled="true" value="#{userController.selectedHod.name}" />
+
+                <h:outputLabel value="Email Address" style="font-weight:bold" />
+                <p:inputText disabled="true"  value="#{userController.selectedHod.email}" />
+            </h:panelGrid>
+
+
+            <br /> 
+            <p:panel header="Link and Unlink HOD  Qualification">
+                <p:panelMenu >
+
+                    <c:forEach items="#{campusController.campusList}"  var="campus">
+                        <p:submenu label="#{campus}"  >
+                            <c:forEach items="#{qualController.getCampusFaculties(campus)}"  var="faculty">
+
+                                <p:submenu label="#{faculty.facultyName}"  icon="ui-icon-note" >
+                                    <p:menuitem>
+                                        <p:dataTable var="myqual" value="#{qualController.getFacultyQualification(faculty.facultyId,campus )}"
+                                                     resizableColumns="true" rows="10"   paginator="true" 
+                                                     editable="true" style="margin-bottom:20px"
+                                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                     rowsPerPageTemplate="10,20,30,40">
+                                            <p:column headerText="Qual Code">
+                                                <h:outputText value="#{myqual.qualCode}" />
+                                            </p:column>
+
+                                            <p:column headerText="Qual Name">
+                                                <h:outputText value="#{myqual.qualName}" />
+                                            </p:column>
+
+                                            <p:column headerText="Qual Level">
+                                                <h:outputText value="#{myqual.qualLevel}" />
+                                            </p:column>
+
+                                            <p:column headerText="Select">
+
+                                                <p:commandButton update="growl" ajax="false" actionListener="#{userController.btnLinkHOD(myqual.qualCode,campus)}" value="#{userController.getBtnLinkText(myqual.qualCode,campus )}" />
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:menuitem>
+
+
+                                </p:submenu>
+
+                            </c:forEach>
+                        </p:submenu>
+                    </c:forEach>                        
+
+                </p:panelMenu>
+            </p:panel>
+
+
+        </h:form>
+
+
+
+    </ui:define>
+</ui:composition>

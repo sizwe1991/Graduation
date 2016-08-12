@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Graduation System</title>
+        <h:outputStylesheet library="css" name="default.css"  />
+        <link rel="shortcut icon"  href="resources/images/favicon.ico"/>
+        <link rel="shortcut icon"  href="../resources/images/favicon.ico"/>
+    </h:head>
+    <h:body>
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
+        <p:dialog modal="true" widgetVar="statusDialog" header="Please wait while processing..."
+                  draggable="false" closable="false" resizable="false" >
+            <p:graphicImage value="/resources/images/ajaxloader/loadingbar.gif" />
+        </p:dialog>
+        <p:layout fullPage="true">
+            <p:layoutUnit position="north" size="120" resizable="false" closable="false"  collapsible="false">
+
+                <img src=  "${request.contextPath}/resources/images/logo.png"  alt="banner" width="500"/>
+
+                <c:if test="#{loginController.user.username != null}" >
+
+                    <h:form styleClass="login">
+                        <p:commandButton id="dynaButton" value="#{loginController.user.name}" icon="ui-icon-person" type="button"/>
+                        <p:menu overlay="true" trigger="dynaButton" my="left top" at="left bottom">
+                            <p:submenu label="Settings">
+                                <p:menuitem value="Logout" ajax="false" actionListener="#{loginController.logout}" style="color: red" />
+
+                            </p:submenu>
+
+                        </p:menu>
+
+                    </h:form>
+
+                </c:if>
+            </p:layoutUnit>
+
+
+            <p:layoutUnit position="west" size="12%" header="Menu" resizable="false" closable="false" collapsible="false" style="border: 0px"  >
+             <!--   <ui:include src="../templates/tiles/LeftMenu.xhtml" />-->
+            </p:layoutUnit>
+
+            <!--         <p:layoutUnit position="east" size="180" header="Help" >
+                        <ui:include src="../templates/tiles/rightMenu.xhtml" />
+                     </p:layoutUnit>  -->
+
+
+            <p:layoutUnit position="center" size="98%">
+
+                <ui:insert name="content">Put default content here, if any.</ui:insert>
+            </p:layoutUnit>
+
+            <!--<p:layoutUnit position="south" size="130"  resizable="false" closable="false" collapsible="false">
+                 <h:outputText value="South unit content." />
+             </p:layoutUnit>  -->
+        </p:layout>
+    </h:body>
+</html>

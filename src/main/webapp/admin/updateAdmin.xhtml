@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+    <ui:define name="content">
+
+        <h:form>
+            <p:panel header="Reset User Password">
+                <p:growl id="growl" showDetail="true" life="6000" sticky="true" /> 
+
+                <h:panelGrid id="grid" columns="2" cellpadding="5">
+
+
+
+                    <h:outputLabel for="staffNo" value="Staff Number: " style="font-weight:bold"/>                    
+                    <p:inputText id="staffNo"  value="#{userController.selectedUser.username}"   label="Staff Number" readonly="true"/>
+
+                    <h:outputLabel for="name" value="Name:" style="font-weight:bold"/>                    
+                    <p:inputText readonly="true" id="name" value="#{userController.selectedUser.name}"    label="Name"/>
+
+                    <h:outputLabel for="Email"  value="Email Address: " style="font-weight:bold" />                    
+                    <p:inputText id="Email"  value="#{userController.selectedUser.email}"  label="Email Address" readonly="true"/>
+
+
+                    <h:outputLabel for="type"  value="User Type: " style="font-weight:bold"/>
+                    <p:inputText readonly="true" value="#{userController.selectedUser.role}" style="font-weight:bold" />
+
+
+                    <h:outputLabel for="status"  value="Status: " style="font-weight:bold"/>      
+                    <p:inputText readonly="true" value="#{userController.selectedUser.status}" style="font-weight:bold" />
+
+
+
+
+                    <h:outputLabel for="password" value="Password:" style="font-weight:bold"/>                    
+                    <h:panelGrid id="grid1" columns="2" cellpadding="5" >
+                        <p:password id="password" value="#{userController.selectedUser.password}"  required="false" label="Password" />
+                        <p:message for="password" />
+
+                    </h:panelGrid>
+
+
+                    <h:outputLabel for="confirmPassword" value="Confirm Password: " style="font-weight:bold"/>                    
+                    <h:panelGrid id="grid2" columns="2" cellpadding="5" >
+                        <p:password id="confirmPassword" value="#{userController.confirm}"  required="false" label="Confirm Password"/>
+                        <p:message for="confirmPassword" />                        
+                    </h:panelGrid>
+
+                    <h:outputText value="User must change password after " />
+                    <p:selectBooleanCheckbox value="#{userController.changePwd}" />
+
+                    <p:commandButton  value="Manage Users" ajax="false" validateClient="false" actionListener="#{userController.backToManageUsers()}" style="margin-right:10px"/>
+
+                    <p:commandButton update="growl"  value="Reset Password" actionListener="#{userController.btnResetPasswordOnclick()}" ajax="false" validateClient="true" style="margin-right:10px"/>
+
+                </h:panelGrid>
+
+            </p:panel>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

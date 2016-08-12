@@ -1,0 +1,36 @@
+<ui:composition template="/template/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+
+        <h:form >
+
+
+            <table align="center">
+                <tr>
+                    <td>
+                        <h1>Oops...!!!</h1>
+                        <h2>404</h2>
+
+                        <p:panel >
+                            <h2>Page not found </h2>
+                        </p:panel>
+
+                        <br/>  <br/>
+                        <p:commandButton value="Restore Page" ajax="false" actionListener="#{login.logout()}" style="color: green" />
+                    </td>
+                </tr>
+            </table>
+
+
+        </h:form>
+
+
+
+
+        <h:messages></h:messages>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en"
+      template="/templates/layout.xhtml"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"     
+      xmlns:p="http://primefaces.org/ui"
+
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Graduation System</title>
+        <h:outputStylesheet library="css" name="student_default.css"/>
+        <link rel="shortcut icon"  href="resources/images/favicon.ico"/>
+        <link rel="shortcut icon"  href="../resources/images/favicon.ico"/>
+        <style>
+
+        </style>
+    </h:head>
+    <h:body>   
+
+        <h:form id="mainForm" styleClass="loginPanelStyle" >
+
+            <p:growl id="msgs" showDetail="true" sticky="false" life="6000" /> 
+
+            <p:fieldset  styleClass="loginPanelStyle" 
+                         legend="VUT GRADUATIONS SELF CHECK" >
+                <img src=  "${request.contextPath}/resources/images/logo.png"  alt="banner" width="500" align="center"/>                    
+                <br />
+                <p:separator /> 
+
+
+                <p:commandButton ajax="false" style=" background-color: red;  float: right; font-family: cursive" id="dynaButton" actionListener="#{login.logout()}" value="LogOut (#{login.gradStudent.admitStno})" icon="ui-icon-person" />
+
+
+                <br /> 
+                <p style="font-family: cursive; font-size: smaller"><b>Graduation Status: </b>
+                    <c:if test="#{login.gradStudent.admitStatus.equalsIgnoreCase('POSSIBLE')}">
+                        <font color="orange">Possible graduate</font>
+                    </c:if>
+                    <c:if test="#{login.gradStudent.admitStatus.equalsIgnoreCase('EXAM:Received')}">
+                        <font color="green">Your documents have been received</font>
+                    </c:if>
+                    <c:if test="#{login.gradStudent.admitStatus.equalsIgnoreCase('Verification:Rejected')}">
+                        <font color="red">Your documents couldn't be verified</font>
+                    </c:if>
+                    <c:if test="#{login.gradStudent.admitStatus.equalsIgnoreCase('Verification:Approved')}">
+                        <font color="green">Your documents are verified successfully</font>
+                    </c:if>
+                    <c:if test="#{login.gradStudent.admitStatus.equalsIgnoreCase('HOD:Rejected')}">
+                        <font color="red">Application <strong>Unsuccessfully</strong> </font>
+                    </c:if>
+                    <c:if test="#{login.gradStudent.admitStatus.equalsIgnoreCase('HOD:Approved')}">
+                        <font color="green">Application successful </font>
+                    </c:if>
+                </p>
+                <p:progressBar value="#{(gradStageController.getStageNumber(login.gradStudent.admitStatus))/4*100}" labelTemplate="{value}%" displayOnly="true"/>
+
+                <p style="text-align: right; font-family: cursive; font-size: smaller"><b>Step #{gradStageController.getStageNumber(login.gradStudent.admitStatus)} of 4</b></p> 
+                <p      style=" font-family: cursive">  Welcome  #{login.gradStudent.admitTitle} #{login.gradStudent.admitInit}  #{login.gradStudent.admitSurname}
+                </p>
+
+
+                <c:if test="#{login.gradStudent.admitStatus.equalsIgnoreCase('POSSIBLE')}">
+                    <p  style=" font-family: cursive">
+                        Qualification:  #{login.gradStudent.admitQualdesc}
+                        <br /> <br /> 
+                        Comment:   <font color="red">Please submit 2x matric and id certified copies to exam office</font>
+                    </p>   
+                </c:if>
+
+                <c:if test="#{login.gradStudent.admitStatus.equalsIgnoreCase('EXAM:Received')}">
+                    <p  style=" font-family: cursive">
+                        Qualification:  #{login.gradStudent.admitQualdesc}
+                        <br /> <br /> 
+                        Comment: <font color="orange" >Awaiting for fraud and verification to review your documents</font>
+                        <br /><b /> <b />
+                        Attendance: 
+                        <c:if test="#{ceremonyController.getGradAttendance(login.gradStudent.admitStno).equalsIgnoreCase('Presencia')}">
+                            <font color="green" >#{ceremonyController.getGradAttendance(login.gradStudent.admitStno)}</font>
+                        </c:if>   
+                        <c:if test="#{ceremonyController.getGradAttendance(login.gradStudent.admitStno).equalsIgnoreCase('Absencia')}">
+                            <font color="red" >#{ceremonyController.getGradAttendance(login.gradStudent.admitStno)}</font>
+                        </c:if>  
+
+
+                    </p>
+                </c:if>
+
+                <c:if test="#{login.gradStudent.admitStatus.equalsIgnoreCase('Verification:Rejected')}">
+                    <p  style=" font-family: cursive">
+                        Qualification:  #{login.gradStudent.admitQualdesc}
+                        <br /> <br /> 
+                        Comment: <font color="red">#{login.gradStudent.comment}, Please see examinations office for more info </font>
+                    </p>
+                </c:if>
+
+                <c:if test="#{login.gradStudent.admitStatus.equalsIgnoreCase('Verification:Approved')}">
+                    <p  style=" font-family: cursive">
+                        Qualification:  #{login.gradStudent.admitQualdesc}
+                        <br /> <br /> 
+                        Comment: <font color="orange" >Awaiting for HOD to review your subjects</font>
+                        <br /><b /> <b />
+                        Attendance: 
+                        <c:if test="#{ceremonyController.getGradAttendance(login.gradStudent.admitStno).equalsIgnoreCase('Presencia')}">
+                            <font color="green" >#{ceremonyController.getGradAttendance(login.gradStudent.admitStno)}</font>
+                        </c:if>   
+                        <c:if test="#{ceremonyController.getGradAttendance(login.gradStudent.admitStno).equalsIgnoreCase('Absencia')}">
+                            <font color="red" >#{ceremonyController.getGradAttendance(login.gradStudent.admitStno)}</font>
+                        </c:if> 
+                    </p>
+                </c:if>
+
+                <c:if test="#{login.gradStudent.admitStatus.equalsIgnoreCase('HOD:Rejected')}">
+                    <p  style=" font-family: cursive">
+                        Qualification:  #{login.gradStudent.admitQualdesc}
+                        <br /> <br /> 
+                        Comment: <font color="red">Application Rejected on HOD level because #{login.gradStudent.comment}, please see your HOD for more details </font>
+                    </p>
+                </c:if>
+
+                <c:if test="#{login.gradStudent.admitStatus.equalsIgnoreCase('HOD:Approved')}">
+                    <p  style=" font-family: cursive">
+                        Qualification:  #{login.gradStudent.admitQualdesc}
+                        <br /> <br /> 
+                        Comment: <font color="green" > Congratulations, your are a confirmed <b>graduate</b> </font>
+                
+                        <a id="MyLink"  style="display:none"></a>
+                        <input id="Button1" type="button" value="View More" onclick="OpenWord()" />
+                        <script>
+                            function OpenWord() {
+
+                                var mylink = document.getElementById("MyLink");
+                                mylink.setAttribute("href", "../resources/invitation.docx");
+                                mylink.click();
+
+                            }
+                        </script>
+                        <br /><b /> 
+                        Attendance: 
+                        <c:if test="#{ceremonyController.getGradAttendance(login.gradStudent.admitStno).equalsIgnoreCase('Presencia')}">
+                            <font color="green" >#{ceremonyController.getGradAttendance(login.gradStudent.admitStno)}</font>
+                        </c:if>   
+                        <c:if test="#{ceremonyController.getGradAttendance(login.gradStudent.admitStno).equalsIgnoreCase('Absencia')}">
+                            <font color="red" >#{ceremonyController.getGradAttendance(login.gradStudent.admitStno)}</font>
+                        </c:if> 
+                    </p>
+                </c:if>
+
+
+                <h4 style=" font-family: cursive">
+                    <i>   Data on this site is updated 2x per semester</i>
+                </h4>   
+
+
+
+
+            </p:fieldset>
+
+
+
+
+
+
+            <p:dialog header="Graduation Attendance" widgetVar="confirmGrad" showEffect="explode" hideEffect="bounce" height="100%">
+                <h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
+                    <p:outputLabel  value="Would you like to reserve a sit for graduation" />
+                    <p:selectOneRadio  value="#{login.newStatus}">
+                        <f:selectItem itemLabel="Yes" itemValue="#{status.CEREMONY_ATTEND}" />
+                        <f:selectItem itemLabel="No" itemValue="#{status.CEREMONY_NOT_ATTEND}" />
+                    </p:selectOneRadio>
+                    <p:commandButton update="msgs" value="Save"  actionListener="#{login.btnSaveAttendanceStatus()}"    icon="ui-icon-circle-check" style="float: right" />
+                </h:panelGrid>
+            </p:dialog>
+
+
+        </h:form>
+
+    </h:body>
+</html>

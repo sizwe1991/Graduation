@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition template="/template/examTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+    <ui:define name="content">
+
+     
+
+         <h:form id="mainForm" styleClass="loginPanelStyle" >
+                    <p:growl id="msgs" showDetail="true" sticky="false" life="6000" />                        
+
+                    <p:fieldset  styleClass="loginPanelStyle" 
+                                 legend="Examination Office" >
+                        <img src=  "${request.contextPath}/resources/images/logo.png"  alt="banner" width="500" align="center"/>                    
+
+                                             
+
+                        <table style="border: solid; width: 100%">
+                            <tr>
+                                <td>Student number</td>
+                                <td> #{studentController.gradStudent.admitStno}          </td>     </tr>
+                            <tr>
+                                <td>Initials</td>
+                                <td>#{studentController.gradStudent.admitInit} </td>
+                            </tr>
+                            <tr>
+                                <td>Full name</td>
+                                <td>#{studentController.gradStudent.admitFullnames}  </td>
+                            </tr>
+                            <tr>
+                                <td>Surname</td>
+                                <td>#{studentController.gradStudent.admitSurname} </td>
+                            </tr>
+                            <tr>
+                                <td>Qualification</td>
+                                <td>#{studentController.gradStudent.admitQualdesc} </td>
+                            </tr>
+
+                        </table>
+
+
+                       
+
+                        <h:commandButton  id="btnLogin" style="float: right" value="Submit" 
+                                         actionListener="#{studentController.btnSaveDocument()}"        />
+                    </p:fieldset>
+
+
+                </h:form>
+
+    </ui:define>
+</ui:composition>

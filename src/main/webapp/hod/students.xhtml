@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="content">
+
+        <h:form id="mainForm">
+            <p:growl id="msgs" showDetail="true" sticky="false" life="6000" /> 
+            <center>
+
+
+                <p:panelGrid columns="10">
+                    <p:outputLabel value="Campus " />
+                    <p:inputText readonly="true" value="#{hodController.selecteCampus.campusCode}" />
+                    <p:outputLabel value="Faculty " />
+                    <p:inputText value="#{hodController.selectedQualification.facultyId.facultyName}" style="width: 300px"/>
+                    <p:outputLabel value="Qualification " />
+                    <p:inputText value="#{hodController.selectedQualification.qualName}" style="width: 300px"/>
+                         <p:outputLabel value="Qualification Level" />
+                    <p:inputText value="#{hodController.selectedQualification.qualLevel}" style="width: 300px"/>
+                </p:panelGrid> 
+            </center>
+
+            <br />
+
+            <p:separator />
+
+            <p:dataTable id="pnlStudents" emptyMessage="No Students found for this qualification"  editable="true"
+                         var="student" value="#{hodController.qualStudentList}"
+                         resizableColumns="false" rows="20"   paginator="true"  
+                         style="margin-bottom:20px"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="20,30,40" >
+
+
+                <p:column  headerText="Marks" style="width:40px">
+                    <p:rowToggler />
+                </p:column>
+
+                <p:column sortBy="admitStno" footerText="Total:" width="90" headerText="Student No">
+                    <h:outputText value="#{student.admitStno}" />
+                </p:column>
+
+                <p:column sortBy="admitInit" footerText="#{hodController.qualStudentList.size()}"  width="70" headerText="Initials">
+                    <h:outputText value="#{student.admitInit}" />
+                </p:column>
+
+                <p:column sortBy="admitFullnames" headerText="Full Names">
+                    <h:outputText value="#{student.admitFullnames}" />
+                </p:column>
+
+                <p:column sortBy="admitSurname" headerText="Surname">
+                    <h:outputText value="#{student.admitSurname}" />
+                </p:column>
+
+                <p:column sortBy="admitIdpassport" headerText="ID/Passport">
+                    <h:outputText value="#{student.admitIdpassport}" />
+                </p:column>
+
+                <p:column headerText="Action" width="190">
+                    <p:menuButton value="Respond to Student">
+                        <p:menuitem ajax="false" actionListener="#{hodController.btnApproveStudent(student)}" value="Approve Student" update=":mainForm:pnlStudents" />  
+                        <p:menuitem ajax="false" actionListener="#{hodController.btnRejectStudent(student)}" value="Reject Student" update=":mainForm:pnlStudents"/>
+                    </p:menuButton>
+
+                </p:column>
+
+
+
+                <p:rowExpansion>
+
+                    <p:dataTable sortOrder="ascending" sortBy="#{record.admitSubjectcode.substring(5,6)}" stickyHeader="true"  id="dt" var="record" value="#{studentController.studentAcademicInfo(student)}"
+                                 >
+                        <p:column width="90"  headerText="Sub Code">
+                            <h:outputText value="#{record.admitSubjectcode}" />
+                        </p:column>
+
+                        <p:column footerText="#{studentController.studentAcademicInfo(student).size()}" headerText="Description" >
+                            <h:outputText value="#{record.admitSubjectdesc}" />
+                        </p:column>
+
+                        <p:column footerText="#{studentController.getAvg(student)}" headerText="Mark" width="50">
+                            <h:outputText value="#{record.admitMark}" />
+                        </p:column>
+
+                        <p:column footerText="#{studentController.getCredits(student)}" headerText="Credits" width="70">
+                            <h:outputText value="#{record.admitCreditscore}" />
+                        </p:column>
+
+
+                        <p:summaryRow>
+                            <p:column colspan="3" style="text-align:right">
+                                <h:outputText value="" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="" />
+                            </p:column>
+                        </p:summaryRow>
+
+                    </p:dataTable> 
+                </p:rowExpansion>
+
+            </p:dataTable> 
+
+            <p:dialog header="Please enter reason why you reject  #{hodController.gradStudent.admitStno}-(#{hodController.gradStudent.admitInit} #{hodController.gradStudent.admitSurname}) application" widgetVar="dlg" focus="comment">
+                <h:panelGrid columns="1" cellpadding="5">
+
+
+
+
+                    <p:inputTextarea id="comment" value="#{hodController.comment}" rows="5" cols="70" counter="display"  maxlength="200" counterTemplate="{0} characters remaining." autoResize="false" />
+                    <h:outputText id="display" />
+
+                    <p:panelGrid columns="2" >
+                        <p:commandButton actionListener="#{hodController.btnConfirmRejection()}" ajax="false"  value="Reject Student" update=":mainForm:pnlStudents" icon="ui-icon-disk" />
+
+                    </p:panelGrid>
+
+
+
+
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

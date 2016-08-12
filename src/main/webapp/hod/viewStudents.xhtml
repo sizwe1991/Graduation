@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition template="/template/hodTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+
+    <ui:define name="content">
+
+        <h:form id="frm">
+            <p:growl id="msgs" showDetail="true" sticky="false" life="6000" /> 
+            <p:panelGrid  columns="6">
+                <p:outputLabel value="Faculty Name: "/>
+                <p:inputText size="35" disabled="true" value="#{userQualificationController.qualification.facultyId.facultyName}" />
+
+                <p:outputLabel value="Qual Code: "/>
+                <p:inputText disabled="true" value="#{userQualificationController.qualification.qualCode}" />
+
+                <p:outputLabel value="Qual Name: "/>
+                <p:inputText size="35" disabled="true" value="#{userQualificationController.qualification.qualName}" />
+            </p:panelGrid>
+
+            <p:separator /> <p:separator />
+
+            <p:panel header="Qualification Students">
+                <p:dataTable var="student" value="#{userQualificationController.getStudentList()}"
+                             resizableColumns="true" rows="50"   paginator="true" 
+                             editable="true" style="margin-bottom:20px"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="50,80,90,150">
+                    <p:column headerText="Student Number">
+                        <h:outputText value="#{student.admitStno}" />
+                    </p:column>
+
+                    <p:column headerText="Initials">
+                        <h:outputText value="#{student.admitInit}" />
+                    </p:column>
+
+                    <p:column headerText="Surname">
+                        <h:outputText value="#{student.admitSurname}" />
+                    </p:column>
+
+                    <p:column headerText="ID/Passport">
+                        <h:outputText value="#{student.admitIdpassport}" />
+                    </p:column>
+
+                    <p:column headerText="Transcript">
+                        <p:commandButton ajax="false"   actionListener="#{studentController.studentAcademicInfo(student)}" value="View Transcript" />
+                    </p:column>
+
+                </p:dataTable>     
+            </p:panel>
+
+         
+            
+
+
+           
+        </h:form>
+
+    </ui:define>
+</ui:composition>

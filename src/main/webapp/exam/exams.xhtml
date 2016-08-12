@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+    <ui:define name="content">
+
+
+        <h:form id="mainForm">
+
+            <p:growl id="msgs" life="6000" showDetail="true"/>
+
+            <p:panel style=" width: 100%">
+
+
+
+                <h:panelGrid id="grid" columns="5" cellpadding="5">
+                    <h:outputLabel for="name" value="Search Student:" style="font-weight:bold"/>                    
+                    <p:inputText id="name" placeholder="Search Student"  value="#{studentController.searchInput}"  required="false" label="Name"/>
+                    <p:message for="name" />
+
+
+                    <p:commandButton icon="ui-icon-search" value="Search" actionListener="#{studentController.searchPossible()}" ajax="false" validateClient="true" style="margin-right:10px"/>
+
+                    <p:commandButton id="btnRefresh" style="float: left" actionListener="#{studentController.refreshPossibleStud()}" value="Refresh" 
+                                     icon="ui-icon-refresh" ajax="false"  />
+
+                </h:panelGrid>
+
+            </p:panel>
+
+            <p:panel id="pnl" >
+
+                <p:dataTable    emptyMessage="No student found"
+                                 var="student" value="#{studentController.possibleStud}" 
+                                 rows="20"   paginator="true" 
+                                 editable="true" style="margin-bottom:20px"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="20,30,40,50,60,70">
+
+                    
+
+                    <p:column  sortBy="admitStno" headerText="Student No"  width="90" >
+                        <h:outputText value="#{student.admitStno}" />
+                    </p:column>
+
+                    <p:column sortBy="admitInit" headerText="Initials" width="40">
+                        <h:outputText value="#{student.admitInit}" />
+                    </p:column>
+
+                    <p:column sortBy="admitSurname" width="150" headerText="Surname">
+                        <h:outputText value="#{student.admitSurname}" />
+                    </p:column>
+
+                    <p:column sortBy="admitIdpassport" width="120" headerText="ID/Passport">
+                        <h:outputText value="#{student.admitIdpassport}" />
+                    </p:column>
+
+                    <p:column sortBy="admitQualdesc" width=""  headerText="Qualification">
+                        <h:outputText value="#{student.admitQualdesc}" />
+                    </p:column>
+
+                
+
+                    <p:column headerText="Action" width="180">
+                        <p:menuButton value="Receive Documents">
+                            <p:menuitem ajax="false" actionListener="#{studentController.btnRecieveDocumentPresencia(student)}" value="Presencia" update=":mainForm:msgs"  />  
+                            <p:menuitem ajax="false" actionListener="#{studentController.btnRecieveDocumentAbsencia(student)}" value="Absencia" update=":mainForm:msgs" />
+                        </p:menuButton>
+                    </p:column>
+
+                </p:dataTable>
+            </p:panel>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

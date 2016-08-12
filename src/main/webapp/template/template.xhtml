@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:outputStylesheet library="css" name="default.css"  />
+    <link rel="shortcut icon"  href="resources/images/favicon.ico"/>
+    <link rel="shortcut icon"  href="../resources/images/favicon.ico"/>
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Graduation System</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
+            <p:dialog modal="true" widgetVar="statusDialog" header="Please wait while processing..."
+                      draggable="false" closable="false" resizable="false" >
+                <p:graphicImage value="/resources/images/ajaxloader/loadingbar.gif" />
+            </p:dialog>
+            <p:layout fullPage="true">
+
+                <p:layoutUnit position="north" size="17%" resizable="false" closable="false" collapsible="false">
+                    <img src=  "${request.contextPath}/resources/images/logo.png"  alt="banner" width="500"/>
+
+                    <c:if test="#{login.objUser.username != null}" >
+
+                        <h:form styleClass="login">
+                            <p:commandButton id="dynaButton" value="#{login.objUser.username}-(#{login.objUser.name})" icon="ui-icon-person" type="button"/>
+                            <p:menu overlay="true" trigger="dynaButton" my="left top" at="left bottom">
+                                <p:submenu label="Settings">
+                                    <p:menuitem value="Logout" ajax="false" actionListener="#{login.logout()}" style="color: red" />
+
+                                </p:submenu>
+
+                            </p:menu>
+
+                        </h:form>
+
+                    </c:if>
+
+                </p:layoutUnit>
+
+                <p:layoutUnit position="south" size="40" closable="true" collapsible="true">
+                    <b>  <i>All Right Reserved @ Vaal University of Technology: Information Technology Services @ copyright 2016</i></b>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="west" size="200"  collapsible="true">
+
+                    <c:if test="#{login.objUser !=null}">
+                        <h:form>
+                            <p:menu>
+                                <p:menuitem  actionListener="#{redirect.dashBoardPage()}" value="Dashboard" />
+                            </p:menu>
+
+                            <p:menu >
+                                <p:menuitem value="System Report" actionListener="#{redirect.systemReportPage()}" />
+                            </p:menu>
+
+
+                            <c:if test="#{login.objUser.role.equalsIgnoreCase('ADMIN')}">                          
+                                <p:menu>
+                                    <p:submenu label="Administrator">
+
+                                        <p:menuitem  actionListener="#{redirect.manageUsersPage()}"  icon="ui-icon-person" value="Manage User" />
+                                        <p:menuitem actionListener="#{redirect.manageQualificationPage()}" icon="ui-icon-gear" value="Manage Qualifications" />
+                                        <p:menuitem actionListener="#{redirect.emailConfiguration()}"  icon="ui-icon-wrench"   value="Email Configuration" />
+                                       
+                                    </p:submenu>
+                                </p:menu> 
+                            </c:if>
+
+                            <c:if test="#{login.objUser.role.equalsIgnoreCase('EXAM')}">                          
+                                <p:menu>
+                                    <p:submenu label="Exam Personel">
+
+                                        <p:menuitem value="Receive Documents" actionListener="#{redirect.viewExamPage()}" />
+                                        <p:menuitem value="Change Attandance" actionListener="#{redirect.examChnageStatusPage()}"/>
+                                    </p:submenu>
+
+                                </p:menu>
+                            </c:if>
+
+                            <c:if test="#{login.objUser.role.equalsIgnoreCase('HOD')}">   
+                                <p:menu >
+                                    <c:forEach  items="#{login.getUserCampus()}"  var="campus">                                
+                                        <p:submenu label="#{campus.campusCode}">
+                                            <c:forEach items="#{login.getQualfications(campus)}"  var="qual">
+                                                <p:menuitem title="#{qual.qualLevel}:#{qual.qualName}-(#{hodController.getStudent(qual, campus)})" 
+                                                            id="code" value="#{qual.qualCode}" 
+                                                            icon="ui-icon-folder-open" 
+                                                            actionListener="#{hodController.viewStudents(qual, campus)}" />                  
+                                            </c:forEach>
+                                        </p:submenu>
+                                    </c:forEach>
+
+
+                                </p:menu>
+
+
+
+                                <p:menu>                              
+                                    <p:menuitem value="Revert Changes" actionListener="#{hodController.btnRevertChanges()}" />
+
+                                </p:menu>
+
+                            </c:if>
+
+
+
+                            <c:if test="#{login.objUser.role.equalsIgnoreCase('FRAUD')}">                          
+                                <p:menu>
+                                    <p:submenu label="System Analyst">                              
+                                        <p:menuitem value="View Documents" actionListener="#{redirect.viewFraudPage()}" />
+                                        <p:menuitem value="Revert Changes" actionListener="#{fraudController.openRevertChnages()}" />
+                                    </p:submenu>
+
+                                </p:menu>
+                            </c:if>
+
+                        </h:form>
+                    </c:if>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center">
+                    <ui:insert name="content">
+                        <center>
+                            <h:form id="mainForm">
+
+
+
+                            </h:form>
+
+                        </center>
+
+
+                    </ui:insert>
+                </p:layoutUnit>
+
+            </p:layout>
+
+        </h:body>
+
+    </f:view>
+</html>
+

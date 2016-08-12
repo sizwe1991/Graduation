@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition template="/template/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:form id="mainForm">
+            <p:growl id="growl" life="2000" />
+            <center>
+                <p:panelGrid columns="5" >
+                    <p:outputLabel value="Select Report" />
+                    <p:selectOneMenu id="report" value="#{reportController.report}"  >
+                        <f:selectItem itemLabel="Select Report" itemValue="" noSelectionOption="true" />
+                        <f:selectItem itemLabel="Possible Graduates" itemValue="Possible Graduates" />
+                        <f:selectItem itemLabel="Approved Students" itemValue="Approved Students" />
+                        <f:selectItem itemLabel="Rejected Students" itemValue="Rejected Students" />
+                        <f:selectItem itemLabel="Fraud Passed" itemValue="Fraud Passed" />
+                        <f:selectItem itemLabel="Fraud Failed" itemValue="Fraud Failed" />
+                        <f:selectItem itemLabel="Graduation Presencia" itemValue="Graduation Presencia" />
+                        <f:selectItem itemLabel="Graduation Absencia" itemValue="Graduation Absencia" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Select Campus" />
+                    <p:selectOneMenu id="campus" value="#{reportController.campus}"  >
+                        <f:selectItem itemLabel="All Campus" itemValue="All" noSelectionOption="true" />
+                        <c:forEach items="#{campusController.campusList}"  var="campus">
+                            <f:selectItem itemLabel="#{campus.description}" itemValue="#{campus.shortCode}"  />
+                        </c:forEach>
+
+                    </p:selectOneMenu>
+                    <h:commandButton value="View Report" />
+                </p:panelGrid>
+
+
+            </center>     
+            <br />
+
+            <c:if test="#{reportController.report.equalsIgnoreCase('Possible Graduates')}" >
+                <p:dataTable  id="tblPossibleGraduates" 
+                              var="student" value="#{reportController.getPossible()}" 
+                              resizableColumns="true" rows="20"   paginator="true" 
+                              editable="true" style="margin-bottom:20px"
+                              paginatorTemplate="{CurrentPageReport}
+                              {FirstPageLink} {PreviousPageLink}
+                              {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                              rowsPerPageTemplate="20,30,40">
+                    <f:facet name="header">
+
+                        <p:commandButton id="toggler" type="button" value="Columns"
+                                         style="float:right" icon="ui-icon-calculator" />
+                        <p:columnToggler datasource="tblPossibleGraduates" trigger="toggler" />                 
+                        <p:spacer /><p:spacer /><p:spacer />
+                        <p:outputPanel style="height: 35px; float: right">     
+                            <h:commandLink>
+                                <p:graphicImage value="/resources/images/excel.jpg"  width="30" height="30" />                   
+                                <p:dataExporter type="xls" target="tblPossibleGraduates" fileName="#{reportController.campus} Possible Graduates" pageOnly="false"/>
+                            </h:commandLink>
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="Student No"    width="80" >
+                        <h:outputText value="#{student.admitStno}" />
+                    </p:column>
+
+
+                    <p:column headerText="Full Names" width="180">
+                        <h:outputText value="#{student.admitInit} #{student.admitSurname}" />
+                    </p:column>
+
+                    <p:column headerText="ID/Passport Number" width="160">
+                        <h:outputText value="#{student.admitIdpassport}" />
+                    </p:column>
+
+                    <p:column   headerText="Qualification">
+                        <h:outputText value="#{student.admitQualdesc}" />
+                    </p:column>
+
+                    <p:column width="170"  headerText="Campus">
+                        <h:outputText value="#{reportController.getCampus(student.offeringType)}" />
+                    </p:column>
+
+                </p:dataTable>
+
+
+            </c:if>
+
+
+
+
+            <c:if test="#{reportController.report.equalsIgnoreCase('Approved Students')}" >
+                <p:dataTable   id="tblApprovedStudents"
+                               var="student" value="#{reportController.getApprovedStudents()}" 
+                               resizableColumns="true" rows="20"   paginator="true" 
+                               editable="true" style="margin-bottom:20px"
+                               paginatorTemplate="{CurrentPageReport}
+                               {FirstPageLink} {PreviousPageLink}
+                               {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                               rowsPerPageTemplate="20,30,40">
+                    <f:facet name="header">
+
+                        <p:commandButton id="toggler" type="button" value="Columns"
+                                         style="float:right" icon="ui-icon-calculator" />
+                        <p:columnToggler datasource="tblApprovedStudents" trigger="toggler" />     
+
+                        <p:outputPanel style="height: 35px; float: right">
+                            <h:commandLink>
+                                <p:graphicImage value="/resources/images/excel.jpg"  width="30" height="30" />                   
+                                <p:dataExporter type="xls" target="tblApprovedStudents" fileName="#{reportController.campus} Approved Students" pageOnly="false"/>
+                            </h:commandLink>
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column headerText="Student No"    width="80" >
+                        <h:outputText value="#{student.admitStno}" />
+                    </p:column>
+
+
+                    <p:column headerText="Full Names" width="180">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitInit} #{ceremonyController.getGraduate(student.admitStno).admitSurname}" />
+                    </p:column>
+
+                    <p:column   headerText="Qualification">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitQualdesc}" />
+                    </p:column>
+
+                    <p:column width="60"  headerText="Staff No">
+                        <h:outputText value="#{student.username}" />
+                    </p:column>
+
+                    <p:column   headerText="Date" width="90" >
+                        <h:outputText value="#{reportController.formatDate(student.date)}" />
+                    </p:column>
+
+                    <p:column  headerText="Time" width="60" >
+                        <h:outputText value="#{student.time}" />
+                    </p:column>
+
+                    <p:column width="160" headerText="Campus">
+                        <h:outputText value="#{reportController.getCampus(ceremonyController.getGraduate(student.admitStno).offeringType)}" />
+                    </p:column>
+                </p:dataTable>
+            </c:if>
+
+            <c:if test="#{reportController.report.equalsIgnoreCase('Rejected Students')}" >
+                <p:dataTable   id="tblRejectedStudents"
+                               var="student" value="#{reportController.getRejectedStudents()}" 
+                               resizableColumns="true" rows="20"   paginator="true" 
+                               editable="true" style="margin-bottom:20px"
+                               paginatorTemplate="{CurrentPageReport}
+                               {FirstPageLink} {PreviousPageLink}
+                               {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                               rowsPerPageTemplate="20,30,40">
+                    <f:facet name="header">
+                        <p:commandButton id="toggler" type="button" value="Columns"
+                                         style="float:right" icon="ui-icon-calculator" />
+                        <p:columnToggler datasource="tblRejectedStudents" trigger="toggler" />    
+                        <p:outputPanel style="height: 35px; float: right">
+                            <h:commandLink>
+                                <p:graphicImage value="/resources/images/excel.jpg"  width="30" height="30" />                   
+                                <p:dataExporter type="xls" target="tblRejectedStudents" fileName="#{reportController.campus} Rejected Students" pageOnly="false"/>
+                            </h:commandLink>
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column headerText="Student No"    width="80" >
+                        <h:outputText value="#{student.admitStno}" />
+                    </p:column>
+
+
+                    <p:column headerText="Full Names" width="180">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitInit} #{ceremonyController.getGraduate(student.admitStno).admitSurname}" />
+                    </p:column>
+
+                    <p:column   headerText="Qualification">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitQualdesc}" />
+                    </p:column>
+
+                    <p:column width="60"  headerText="Staff No">
+                        <h:outputText value="#{student.username}" />
+                    </p:column>
+
+                    <p:column   headerText="Date" width="90" >
+                        <h:outputText value="#{reportController.formatDate(student.date)}" />
+                    </p:column>
+
+                    <p:column  headerText="Time" width="60" >
+                        <h:outputText value="#{student.time}" />
+                    </p:column>
+
+                    <p:column width="160" headerText="Campus">
+                        <h:outputText value="#{reportController.getCampus(ceremonyController.getGraduate(student.admitStno).offeringType)}" />
+                    </p:column>
+                </p:dataTable>
+            </c:if>
+
+
+            <c:if test="#{reportController.report.equalsIgnoreCase('Fraud Passed')}" >
+                <p:dataTable   id="tblFraudPassed"
+                               var="student" value="#{reportController.getFraudPassed()}" 
+                               resizableColumns="true" rows="20"   paginator="true" 
+                               editable="true" style="margin-bottom:20px"
+                               paginatorTemplate="{CurrentPageReport}
+                               {FirstPageLink} {PreviousPageLink}
+                               {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                               rowsPerPageTemplate="20,30,40">
+                    <f:facet name="header">
+                        <p:commandButton id="toggler" type="button" value="Columns"
+                                         style="float:right" icon="ui-icon-calculator" />
+                        <p:columnToggler datasource="tblFraudPassed" trigger="toggler" />   
+                        <p:outputPanel style="height: 35px; float: right">
+                            <h:commandLink>
+                                <p:graphicImage value="/resources/images/excel.jpg"  width="30" height="30" />                   
+                                <p:dataExporter type="xls" target="tblFraudPassed" fileName="#{reportController.campus} Fraud Passed Students" pageOnly="false"/>
+                            </h:commandLink>
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column headerText="Student No"    width="80" >
+                        <h:outputText value="#{student.admitStno}" />
+                    </p:column>
+
+
+                    <p:column headerText="Full Names" width="180">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitInit} #{ceremonyController.getGraduate(student.admitStno).admitSurname}" />
+                    </p:column>
+
+                    <p:column   headerText="Qualification">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitQualdesc}" />
+                    </p:column>
+
+                    <p:column width="70"  headerText="Staff No">
+                        <h:outputText value="#{student.username}" />
+                    </p:column>
+
+                    <p:column   headerText="Date" width="90" >
+                        <h:outputText value="#{reportController.formatDate(student.date)}" />
+                    </p:column>
+
+                    <p:column  headerText="Time" width="60" >
+                        <h:outputText value="#{student.time}" />
+
+                        <p:column width="160" headerText="Campus">
+                            <h:outputText value="#{reportController.getCampus(ceremonyController.getGraduate(student.admitStno).offeringType)}" />
+                        </p:column>
+                    </p:column>
+                </p:dataTable>
+            </c:if>
+
+            <c:if test="#{reportController.report.equalsIgnoreCase('Fraud Failed')}" >
+                <p:dataTable  id="tblFraudFailed"
+                              var="student" value="#{reportController.getFraudFailed()}" 
+                              resizableColumns="true" rows="20"   paginator="true" 
+                              editable="true" style="margin-bottom:20px"
+                              paginatorTemplate="{CurrentPageReport}
+                              {FirstPageLink} {PreviousPageLink}
+                              {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                              rowsPerPageTemplate="20,30,40">
+
+                    <f:facet name="header">
+                        <p:commandButton id="toggler" type="button" value="Columns"
+                                         style="float:right" icon="ui-icon-calculator" />
+                        <p:columnToggler datasource="tblFraudFailed" trigger="toggler" />   
+                        <p:outputPanel style="height: 35px; float: right">
+                            <h:commandLink>
+                                <p:graphicImage value="/resources/images/excel.jpg"  width="30" height="30" />                   
+                                <p:dataExporter type="xls" target="tblFraudFailed" fileName="#{reportController.campus} Fraud Failed Students" pageOnly="false"/>
+                            </h:commandLink>
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="Student No"    width="80" >
+                        <h:outputText value="#{student.admitStno}" />
+                    </p:column>
+
+
+                    <p:column headerText="Full Names" width="180">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitInit} #{ceremonyController.getGraduate(student.admitStno).admitSurname}" />
+                    </p:column>
+
+                    <p:column   headerText="Qualification">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitQualdesc}" />
+                    </p:column>
+
+                    <p:column width="70"  headerText="Staff No">
+                        <h:outputText value="#{student.username}" />
+                    </p:column>
+
+                    <p:column   headerText="Date" width="90" >
+                        <h:outputText value="#{reportController.formatDate(student.date)}" />
+                    </p:column>
+
+                    <p:column  headerText="Time" width="60" >
+                        <h:outputText value="#{student.time}" />
+
+                        <p:column width="160" headerText="Campus">
+                            <h:outputText value="#{reportController.getCampus(ceremonyController.getGraduate(student.admitStno).offeringType)}" />
+                        </p:column>
+                    </p:column>
+                </p:dataTable>
+            </c:if>
+
+
+
+
+            <c:if test="#{reportController.report.equalsIgnoreCase('Graduation Presencia')}" >
+                <p:dataTable  id="tblPresencia"
+                              var="student" value="#{reportController.getCeremonyPresencia()}" 
+                              resizableColumns="true" rows="20"   paginator="true" 
+                              editable="true" style="margin-bottom:20px"
+                              paginatorTemplate="{CurrentPageReport}
+                              {FirstPageLink} {PreviousPageLink}
+                              {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                              rowsPerPageTemplate="20,30,40">
+
+                    <f:facet name="header">
+                        <p:commandButton id="toggler" type="button" value="Columns"
+                                         style="float:right" icon="ui-icon-calculator" />
+                        <p:columnToggler datasource="tblPresencia" trigger="toggler" />  
+                        <p:outputPanel style="height: 35px; float: right">
+                            <h:commandLink>
+                                <p:graphicImage value="/resources/images/excel.jpg"  width="30" height="30" />                   
+                                <p:dataExporter type="xls" target="tblPresencia" fileName="#{reportController.campus} Presencia Graduates" pageOnly="false"/>
+                            </h:commandLink>
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="Student No"    width="80" >
+                        <h:outputText value="#{student.admitStno}" />
+                    </p:column>
+
+
+                    <p:column headerText="Full Names" width="180">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitInit} #{ceremonyController.getGraduate(student.admitStno).admitSurname}" />
+                    </p:column>
+
+                    <p:column headerText="ID/Passport Number" width="180">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitIdpassport}" />
+                    </p:column>
+
+                    <p:column   headerText="Qualification">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitQualdesc}" />
+                    </p:column>
+
+                    <p:column width="160" headerText="Campus">
+                        <h:outputText value="#{reportController.getCampus(ceremonyController.getGraduate(student.admitStno).offeringType)}" />
+                    </p:column>
+
+                </p:dataTable>
+            </c:if>
+
+            <c:if test="#{reportController.report.equalsIgnoreCase('Graduation Absencia')}" >
+                <p:dataTable  id="tblAbsencia"
+                              var="student" value="#{reportController.getCeremonyAbsencia()}" 
+                              resizableColumns="true" rows="20"   paginator="true" 
+                              editable="true" style="margin-bottom:20px"
+                              paginatorTemplate="{CurrentPageReport}
+                              {FirstPageLink} {PreviousPageLink}
+                              {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                              rowsPerPageTemplate="20,30,40">
+
+                    <f:facet name="header">
+                        <p:commandButton id="toggler" type="button" value="Columns"
+                                         style="float:right" icon="ui-icon-calculator" />
+                        <p:columnToggler datasource="tblAbsencia" trigger="toggler" />  
+                        <p:outputPanel style="height: 35px; float: right">
+                            <h:commandLink>
+                                <p:graphicImage value="/resources/images/excel.jpg"  width="30" height="30" />                   
+                                <p:dataExporter type="xls" target="tblAbsencia" fileName="#{reportController.campus} Absencia Graduates" pageOnly="false"/>
+                            </h:commandLink>
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="Student No"    width="80" >
+                        <h:outputText value="#{student.admitStno}" />
+                    </p:column>
+
+
+                    <p:column headerText="Full Names" width="180">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitInit} #{ceremonyController.getGraduate(student.admitStno).admitSurname}" />
+                    </p:column>
+
+                    <p:column headerText="ID/Passport Number" width="180">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitIdpassport}" />
+                    </p:column>
+
+                    <p:column   headerText="Qualification">
+                        <h:outputText value="#{ceremonyController.getGraduate(student.admitStno).admitQualdesc}" />
+                    </p:column>
+
+                    <p:column width="160" headerText="Campus">
+                        <h:outputText value="#{reportController.getCampus(ceremonyController.getGraduate(student.admitStno).offeringType)}" />
+                    </p:column>
+
+                </p:dataTable>
+            </c:if>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
